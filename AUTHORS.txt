@@ -1,1 +1,10 @@
 TODO(Checkpoint Requirement 1 of 3): Add team member names and emails.
+
+James Bond
+jamesbond007@techexchange.in
+
+Cami Copoama
+cami_copoama@techexchange.in
+
+Joseph Gabrie
+josephgabrie@techexchange.in
