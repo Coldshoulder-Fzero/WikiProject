@@ -1,5 +1,5 @@
 from flask import render_template
-# from templates import login
+
 
 def make_endpoints(app):
 
@@ -58,3 +58,10 @@ def make_endpoints(app):
     def about():
         return render_template('about.html') 
 
+    @app.route('/login')
+    def login():
+        return render_template('login.html')    
+        
+    @app.route('/signup')
+    def signup():
+        return render_template('signup.html')
