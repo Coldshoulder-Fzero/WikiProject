@@ -1,5 +1,5 @@
 from flask import render_template
-
+# from templates import login
 
 def make_endpoints(app):
 
@@ -12,3 +12,8 @@ def make_endpoints(app):
          return render_template('main.html')
 
     # TODO(Project 1): Implement additional routes according to the project requirements.
+    # @app.route("/login", methods=['GET'])
+    # def login():
+    #     if templates.login =='GET':
+    #         return "Please log in"
+    #     return render_template('login.html')
