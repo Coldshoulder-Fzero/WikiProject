@@ -1,4 +1,5 @@
 # TODO(Project 1): Implement Backend according to the requirements.
+import cgi
 class Backend:
 
     def __init__(self):
@@ -14,6 +15,9 @@ class Backend:
         pass
 
     def sign_up(self):
+        # Encripting passwords
+        # with_salt = f"{name}{site_secret}{password}"
+        # hash = hashlib.blake2b(with_salt.encode()).hexdigest()
         pass
 
     def sign_in(self):

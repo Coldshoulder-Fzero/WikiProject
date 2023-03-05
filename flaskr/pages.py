@@ -58,10 +58,19 @@ def make_endpoints(app):
     def about():
         return render_template('about.html') 
 
-    @app.route('/login')
+    @app.route('/login', methods=['GET', 'POST'])
     def login():
-        return render_template('login.html')    
-        
+        # form = LoginForm()
+        # if form.validate_on_submit():
+        #     login_user(user)
+        #     flask.flash('Logged in!')
+        #     next = flask.request.args.get('next')
+        #     if not is_safe_url(next):
+        #         return flask.abort(400)
+        #     return flask.redirect(next or flask.url_for('/index'))
+        # return flask.render_template('login.html', form = form)
+        return render_template('login.html')
+
     @app.route('/signup')
     def signup():
         return render_template('signup.html')
