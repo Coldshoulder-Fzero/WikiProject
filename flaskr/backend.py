@@ -1,5 +1,8 @@
 # TODO(Project 1): Implement Backend according to the requirements.
-import cgi
+from flask import request
+from google.cloud import storage
+import hashlib
+
 class Backend:
 
     def __init__(self):
@@ -14,13 +17,16 @@ class Backend:
     def upload(self):
         pass
 
-    def sign_up(self):
+    def sign_up(self, name, password):
+
         # Encripting passwords
-        # with_salt = f"{name}{site_secret}{password}"
-        # hash = hashlib.blake2b(with_salt.encode()).hexdigest()
-        pass
+        with_salt = f"{name}{password}"
+        hash = hashlib.blake2b(with_salt.encode()).hexdigest()
+        
+        return 
 
     def sign_in(self):
+
         pass
 
     def get_image(self):

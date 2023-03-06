@@ -1,5 +1,13 @@
-from flask import render_template
+from flask import request, render_template
+from flask import * # to avoid writing flask.function  everytime
+# from flask_Login import LoginManager
 
+# login_manager = LoginManager()
+
+class User:
+    def __init__(self, name, password):
+        self.name = name
+        self.password = password
 
 def make_endpoints(app):
 
@@ -11,6 +19,7 @@ def make_endpoints(app):
         # to render main.html on the home page.
         
          return render_template('main.html')
+
     @app.route("/index")
     def index():
         return render_template('index.html')
@@ -60,17 +69,22 @@ def make_endpoints(app):
 
     @app.route('/login', methods=['GET', 'POST'])
     def login():
+        user = User(request.form.get('name'), request.form.get('password'))
         # form = LoginForm()
         # if form.validate_on_submit():
         #     login_user(user)
-        #     flask.flash('Logged in!')
-        #     next = flask.request.args.get('next')
+        #     flash('Logged in!')
+        #     next = request.args.get('next')
         #     if not is_safe_url(next):
-        #         return flask.abort(400)
-        #     return flask.redirect(next or flask.url_for('/index'))
-        # return flask.render_template('login.html', form = form)
+        #         return abort(400)
+        #     return redirect(next or url_for('index'))
         return render_template('login.html')
 
-    @app.route('/signup')
+    @app.route('/signup', methods=['GET'])
     def signup():
         return render_template('signup.html')
+
+    # @app.route('/logout') @login_required
+    # def logout():
+    #     user = User(request.form.get('name'), request.form.get('password'))
+    #     return render_template('logout.html')
