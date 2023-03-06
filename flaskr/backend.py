@@ -5,9 +5,16 @@ import hashlib
 
 class Backend:
 
-    def __init__(self):
-        pass
-        
+    def init(self):
+
+        self.storage_client = storage.Client()
+
+        self.user_bucket_name = "bucket-users-password"
+        self.content_bucket_name = "bucket-contents"
+
+        self.user_bucket = self.storage_client.bucket(self.user_bucket_name)
+        self.content_bucket = self.storage_client.bucket(self.content_bucket_name)
+
     def get_wiki_page(self, name):
         pass
 
@@ -31,4 +38,3 @@ class Backend:
 
     def get_image(self):
         pass
-

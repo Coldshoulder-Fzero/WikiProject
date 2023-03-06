@@ -1,8 +1,18 @@
-from flask import request, render_template
+from flask import render_template, request, redirect, abort, url_for
+from google.cloud import storage
 from flask import * # to avoid writing flask.function  everytime
 # from flask_Login import LoginManager
 
 # login_manager = LoginManager()
+
+bucket = storage.Client().bucket("thewikicontent")
+ryan = bucket.get_blob("Ryan.jpg")
+james = bucket.get_blob("James.png")
+cami = bucket.get_blob("cami.jpg")
+
+bucket_name = "thewikicontent"
+client = storage.Client()
+
 
 class User:
     def __init__(self, name, password):
@@ -11,61 +21,90 @@ class User:
 
 def make_endpoints(app):
 
-    # Flask uses the "app.route" decorator to call methods when users
-    # go to a specific route on the project's website.
     @app.route("/")
     def home():
-        # TODO(Checkpoint Requirement 2 of 3): Change this to use render_template
-        # to render main.html on the home page.
-        
-         return render_template('main.html')
+        return render_template('main.html')
 
-    @app.route("/index")
-    def index():
-        return render_template('index.html')
+    @app.route('/pages', methods=['GET', 'POST'])
+    def pages():
+        if request.method == 'POST':
+            # Get the page name and text from the form data
+            page_name = request.form['page_name']
+            text = request.form['text']
 
-    @app.route('/page1')
-    def page1():
-        return render_template('page1.html')
+            # Create a new blob with the page text
+            blob = bucket.blob(f"{page_name}.txt")
+            blob.upload_from_string(text)
 
-    @app.route('/page2')
-    def page2():
-        return render_template('page2.html')
+            # Redirect the user to the new page
+            return redirect(url_for('show_page', page_name=page_name))
+        else:
+            # Display a list of all the pages
+            blobs = bucket.list_blobs()
+            text_blobs = [blob for blob in blobs if blob.name.endswith('.txt')]
+            pages = [blob.name[:-4] for blob in text_blobs]
+            return render_template('pages.html', pages=pages)
 
-    @app.route('/page3')
-    def page3():
-        return render_template('page3.html')
-    @app.route('/page4')
-    def page4():
-        return render_template('page4.html')
+    @app.route('/pages/<page_name>')
+    def show_page(page_name):
+        # get the content from the GCS bucket
+        blob = bucket.get_blob(f"{page_name}.txt")
 
-    @app.route('/page5')
-    def page5():
-        return render_template('page5.html')
+        if blob is None:
+            # if the page doesn't exist, return a 404 error
+            abort(404)
 
-    @app.route('/page6')
-    def page6():
-        return render_template('page6.html')    
-    @app.route('/page7')
-    def page7():
-        return render_template('page7.html')
+        # read the content from the blob and convert it to a string
+        content = blob.download_as_string().decode('utf-8')
 
-    @app.route('/page8')
-    def page8():
-        return render_template('page8.html')
+        # render the show_page template with the title and content
+        return render_template('show_page.html', title=page_name, content=content)
 
-    @app.route('/page9')
-    def page9():
-        return render_template('page9.html')    
-    @app.route('/page10')
-    def page10():
-        return render_template('page10.html')
-
-    # TODO(Project 1): Implement additional routes according to the project requirements.
 
     @app.route("/about")
     def about():
-        return render_template('about.html') 
+        ryan_url = ryan.public_url
+        james_url = james.public_url
+        cami_url = cami.public_url
+        return render_template('about.html', ryan_url=ryan_url, james_url=james_url, cami_url=cami_url)
+
+
+    @app.route('/sega')
+    def sega():
+        return render_template('sega.html')
+
+    @app.route('/Atari')
+    def Atari():
+        return render_template('Atari.html')
+
+    @app.route('/DS')
+    def DS():
+        return render_template('DS.html')
+    @app.route('/MobileGaming')
+    def MobileGaming():
+        return render_template('MobileGaming.html')
+
+    @app.route('/Nintendo')
+    def Nintendo():
+        return render_template('Nintendo.html')
+
+    @app.route('/Playstation')
+    def Playstation():
+        return render_template('Playstation.html')    
+    @app.route('/Steam')
+    def Steam():
+        return render_template('Steam.html')
+
+    @app.route('/Tetris')
+    def Tetris():
+        return render_template('Tetris.html')
+
+    @app.route('/Wii')
+    def Wii():
+        return render_template('Wii.html')    
+    @app.route('/xbox')
+    def xbox():
+        return render_template('xbox.html')
 
     @app.route('/login', methods=['GET', 'POST'])
     def login():
