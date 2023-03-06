@@ -3,7 +3,7 @@ from google.cloud import storage
 
 class Backend:
 
-    def __init__(self):
+    def init(self):
 
         self.storage_client = storage.Client()
 
