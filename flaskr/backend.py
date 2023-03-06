@@ -26,6 +26,8 @@ class Backend:
 
     def sign_up(self, name, password):
 
+        password_bucket = "theuserspasswords"
+                
         # Encripting passwords
         with_salt = f"{name}{password}"
         hash = hashlib.blake2b(with_salt.encode()).hexdigest()
