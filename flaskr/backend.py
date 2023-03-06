@@ -14,29 +14,43 @@ class Backend:
 
         self.user_bucket = self.storage_client.bucket(self.user_bucket_name)
         self.content_bucket = self.storage_client.bucket(self.content_bucket_name)
-
+        
     def get_wiki_page(self, name):
-        pass
+        blob = self.content_bucket.get_blob(name)
+        if blob is None:
+            raise ValueError("Page not found")
+        return blob.download_as_bytes()
 
     def get_all_page_names(self):
-        pass
+        blobs = self.content_bucket.list_blobs()
+        return [blob.name for blob in blobs]
 
-    def upload(self):
-        pass
+    def upload(self, name, data):
+        blob = self.content_bucket.blob(name)
+        blob.upload_from_string(data)
 
-    def sign_up(self, name, password):
+    def sign_up(self, username, password):
+        blob = self.user_bucket.blob(username)
+        if not blob.exists():
+            from hashlib import sha256
 
-        password_bucket = "theuserspasswords"
-                
-        # Encripting passwords
-        with_salt = f"{name}{password}"
-        hash = hashlib.blake2b(with_salt.encode()).hexdigest()
-        
-        return 
+            hashed_password = sha256(password.encode("utf-8")).hexdigest()
+            data = f"password={hashed_password}".encode("utf-8")
+            blob.upload_from_string(data)
 
-    def sign_in(self):
+    def sign_in(self, username, password):
+        blob = self.user_bucket.get_blob(username)
+        if blob is None:
+            return False
 
-        pass
+        from hashlib import sha256
 
-    def get_image(self):
-        pass
+        hashed_password = sha256(password.encode("utf-8")).hexdigest()
+        return hashed_password == blob.download_as_text().split("=")[1]
+
+    def get_image(self, name):
+        blob = self.content_bucket.get_blob(name)
+        if blob is None:
+            raise ValueError("Image not found")
+        return blob.download_as_bytes()
+
