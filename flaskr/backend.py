@@ -33,8 +33,12 @@ class Backend:
         blob = self.user_bucket.blob(username)
         if not blob.exists():
             from hashlib import sha256
-
-            hashed_password = sha256(password.encode("utf-8")).hexdigest()
+            # hashed_password = sha256(password.encode("utf-8")).hexdigest()
+            # data = f"password={hashed_password}".encode("utf-8")
+            # blob.upload_from_string(data)
+            site_secret = 'awesomeWiki'
+            with_salt =f" {username}{site_secret}{password}"
+            hashed_password = hashlib.blake2b(with_salt.encode()).hexdigest()
             data = f"password={hashed_password}".encode("utf-8")
             blob.upload_from_string(data)
 
