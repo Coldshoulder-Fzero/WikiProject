@@ -18,12 +18,13 @@ def app():
 def client(app):
     return app.test_client()
 
-# TODO(Checkpoint (groups of 4 only) Requirement 4): Change test to
-# match the changes made in the other Checkpoint Requirements.
+
 def test_home_page(client):
     resp = client.get("/")
     assert resp.status_code == 200
-    assert b"Welcome to The Wiki!" in resp.data
+    assert b"<title>awesomeWikiViewer</title>" in resp.data
+    assert b"<h3>Welcome to the wiki!</h3>" in resp.data
+
 
 def test_pages_page(client):
     resp = client.get("/pages")
@@ -33,7 +34,7 @@ def test_pages_page(client):
 def test_about_page(client):
     resp = client.get("/about")
     assert resp.status_code == 200
-    assert b"About Us" in resp.data
+    assert b"About this Wiki" in resp.data
 
 def test_sega_page(client):
     resp = client.get("/sega")
@@ -53,7 +54,7 @@ def test_ds_page(client):
 def test_mobile_gaming_page(client):
     resp = client.get("/MobileGaming")
     assert resp.status_code == 200
-    assert b"Mobile Gaming" in resp.data
+    assert b"MobileGaming" in resp.data
 
 def test_nintendo_page(client):
     resp = client.get("/Nintendo")
