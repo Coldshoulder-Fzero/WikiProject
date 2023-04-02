@@ -1,9 +1,6 @@
 from flask import render_template, request, redirect, abort, url_for
 from google.cloud import storage
 from flask import * # to avoid writing flask.function  everytime
-from flask_Login import LoginManager
-
-login_manager = LoginManager()
 
 user_bucket =("theuserspasswords")
 bucket = storage.Client().bucket("thewikicontent")
@@ -13,12 +10,6 @@ cami = bucket.get_blob("cami.jpg")
 
 bucket_users = "thewikicontent"
 client = storage.Client()
-
-
-class User:
-    def __init__(self, name, password):
-        self.name = name
-        self.password = password
 
 def make_endpoints(app):
 
@@ -106,27 +97,3 @@ def make_endpoints(app):
     @app.route('/xbox')
     def xbox():
         return render_template('xbox.html')
-
-    @app.route('/login', methods=['GET', 'POST'])
-    def login():
-        user = User(request.form.get('name'), request.form.get('password'))
-        blob_u = bucket_users.get_blob({'user:password'})
-        data_user = blob_u.download_as_string(user).decode('utf-8')
-        if user == data_user:
-            login_user(user)
-            
-            flash('Logged in!')
-            next = request.args.get('next')
-            if not is_safe_url(next):
-                return abort(400)
-            return redirect(next or url_for('index'))
-        return render_template('login.html')
-
-    @app.route('/signup', methods=['GET'])
-    def signup():
-        bucket_users        
-        return render_template('signup.html')
-
-    @app.route('/logout') @login_required
-    def logout():
-        return logout_user(user)

@@ -1,25 +1,18 @@
+<!-- Template for the Login page -->
+
 {% extends "main.html" %}
 
+<!-- Use template inheritance to update the content of the page -->
+
 {% block page_name %}
-Log in
+Login
 {% endblock %}
 
 {% block content %}
-
-<head>
-    <head>
-        <title>Login</title>
-    </head>
-</head>
-
-<body>
-    <form>
-
-        <input required type="text" placeholder="Name" class="name">
-        <input required type="text" placeholder="Password" class="password">
-        <button type="submit">Login</button>
-
-    </form>
-</body>
-
+<!-- specify the endpoint to send request to -->
+<form method="POST" action="/signup">
+   <input required type="text" type="text" name="username" placeholder="Name" autofocus="">
+   <input required type="text" type="password" name="password" placeholder="Password">
+   <button type="submit">Login</button>
+</form>
 {% endblock %}

@@ -1,5 +1,6 @@
-from flaskr import pages
-
+from flaskr import pages, login
+from flaskr.backend import Backend # import our Backend implementation
+from flask_login import LoginManager
 from flask import Flask
 
 import logging
@@ -26,7 +27,18 @@ def create_app(test_config=None):
         # Load the test config if passed in.
         app.config.from_mapping(test_config)
 
-    # TODO(Project 1): Make additional modifications here for logging in, backends
-    # and additional endpoints.
+    # initialize instance of LoginManager
+    login_manager = LoginManager()
+    login_manager.init_app(app)
+    
+    # set the default login view to /login
+    login_manager.login_view = 'login'
+
+    # initialize instance of our Backend
+    backend = Backend()
+
+    # create all the endpoints required for the app
     pages.make_endpoints(app)
+    login.make_endpoints(app, login_manager, backend)
+
     return app
