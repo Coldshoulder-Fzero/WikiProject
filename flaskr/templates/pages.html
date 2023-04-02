@@ -11,17 +11,6 @@ Pages in the Wiki
             {% for page in pages %}
             <li><a href="{{ url_for('show_page', page_name=page) }}">{{page}}</a></li>
             {% endfor %}
-            <!-- <li><a href="{{ url_for('sega') }}">sega</a></li>
-            <li><a href="{{ url_for('Atari') }}">Atari</a></li>
-            <li><a href="{{ url_for('DS') }}">DS</a></li>
-            <li><a href="{{ url_for('MobileGaming') }}">MobileGaming</a></li>
-            <li><a href="{{ url_for('Nintendo') }}">Nintendo</a></li>
-            <li><a href="{{ url_for('Playstation') }}">Playstation</a></li>
-            <li><a href="{{ url_for('Steam') }}">Steam</a></li>
-            <li><a href="{{ url_for('Tetris') }}">Tetris</a></li>
-            <li><a href="{{ url_for('Wii') }}">Wii</a></li>
-            <li><a href="{{ url_for('xbox') }}">xbox</a></li>
-            <li><a href="{{ url_for('show_page', page_name='my_page') }}">show_page</a></li> -->
         </ul>
     </nav>
 {% endblock %}

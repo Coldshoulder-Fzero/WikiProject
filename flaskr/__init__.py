@@ -1,4 +1,4 @@
-from flaskr import pages, login
+from flaskr import pages, login, upload
 from flaskr.backend import Backend # import our Backend implementation
 from flask_login import LoginManager
 from flask import Flask
@@ -38,7 +38,8 @@ def create_app(test_config=None):
     backend = Backend()
 
     # create all the endpoints required for the app
-    pages.make_endpoints(app)
+    pages.make_endpoints(app, backend)
     login.make_endpoints(app, login_manager, backend)
-
+    upload.make_endpoints(app, backend)
+    
     return app

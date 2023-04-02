@@ -19,9 +19,8 @@
             {% if current_user.is_active %}
             <!-- display the user name -->
             {{ current_user.username }}
-            <!-- TODO(add link for upload) -->
+            <a href="{{ url_for('upload') }}">Upload</a>
             <a href="{{ url_for('logout') }}">Logout</a>
-            &nbsp;&nbsp; 
             <!-- otherwise, display the login and signup links -->
             {% else %}
             <a href="{{ url_for('login') }}">Login</a>
