@@ -1,30 +1,39 @@
-
-
 <!-- base.html -->
 <!DOCTYPE html>
 <html>
 
 <head>
-    <title>{% block title %}{% endblock %}</title>
+    <title>{% block page_name %}{{ page_name }}{% endblock %}</title>
 </head>
 
 <body>
     <header>
-        
         <h1>awesomeWikiViewer</h1>
+
+        <!-- Links for the navigation bar -->
         <nav>
             <a href="{{ url_for('home') }}">Home</a>
             <a href="{{ url_for('about') }}">About</a>
             <a href="{{ url_for('pages') }}">Index</a>
+             <!-- only show the upload and logout links if the user is logged in -->
+            {% if current_user.is_active %}
+            <!-- display the user name -->
+            {{ current_user.username }}
+            <a href="{{ url_for('upload') }}">Upload</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+            <!-- otherwise, display the login and signup links -->
+            {% else %}
+            <a href="{{ url_for('login') }}">Login</a>
+            <a href="{{ url_for('signup') }}">Sign Up</a>
+            {% endif %}
         </nav>
-        <h3> Welcome to the wiki!!!  It's about video game history</h3>
-        
+        <h3> Welcome to the wiki!!!  It's about video game history</h3>  
     </header>
 
-    <main>
-        {% block content %}
-        {% endblock %}
-    </main>
+    <!-- empty div to use to populate generic content for the page -->
+    <div>       
+        {% block content %}{{ page_content }}{% endblock %}
+    </div>
 
     <footer>
         &copy; 2023 awesomeWikiViewer

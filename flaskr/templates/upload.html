@@ -1,0 +1,14 @@
+{% extends "main.html" %}
+ 
+{% block page_name %}
+Upload to the Wiki
+{% endblock %}
+ 
+{% block content %}
+<h3>Upload a doc to the Wiki</h3>
+<form method="POST" action="/upload" enctype="multipart/form-data" >
+   <input type="text" name="wikiname" placeholder="wikiname">
+   <input type="file" name="wikicontent">
+   <button>Upload</button>
+</form>
+{% endblock %}
