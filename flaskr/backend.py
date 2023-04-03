@@ -3,6 +3,7 @@ from google.cloud import storage
 from io import BytesIO
 from hashlib import sha256
 
+
 class Backend:
 
     def __init__(self, storage_client=storage.Client()):
@@ -23,7 +24,11 @@ class Backend:
     def get_all_page_names(self):
         blobs = self.content_bucket.list_blobs()
         # we should ignore any blobs that are images
-        return [blob.name for blob in blobs if not blob.name.endswith(('png', 'jpg', 'jpeg'))]
+        return [
+            blob.name
+            for blob in blobs
+            if not blob.name.endswith(('png', 'jpg', 'jpeg'))
+        ]
 
     def upload(self, name, blob_data):
         blob = self.content_bucket.get_blob(name)
@@ -52,7 +57,8 @@ class Backend:
             raise ValueError(f'Username {username} does not exist!')
 
         # create hashed string to compare with bucket contents
-        expected_hashed_string = sha256(f'{username}:{password}'.encode()).hexdigest()
+        expected_hashed_string = sha256(
+            f'{username}:{password}'.encode()).hexdigest()
         with blob.open() as b:
             if expected_hashed_string == b.read():
                 # successful login, return a User object

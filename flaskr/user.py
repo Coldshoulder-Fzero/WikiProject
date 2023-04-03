@@ -5,7 +5,9 @@ The Flask Login library will load users with our implementation. By default, we 
 Reference documentation: https://flask-login.readthedocs.io/en/latest/#your-user-class
 """
 
+
 class User:
+
     def __init__(self, username):
         """Constructs a default instance of the User class for login/logout."""
 
