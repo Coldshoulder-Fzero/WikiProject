@@ -1,0 +1,18 @@
+<!-- Template for the Sign Up page -->
+
+{% extends "main.html" %}
+
+<!-- Use template inheritance to update the content of the page -->
+
+{% block page_name %}
+Sign Up
+{% endblock %}
+
+{% block content %}
+<!-- specify the endpoint to send request to -->
+<form method="POST" action="/signup">
+   <input required type="text" type="text" name="username" placeholder="Name" autofocus="">
+   <input required type="text" type="password" name="password" placeholder="Password">
+   <button type="submit">Sign Up</button>
+</form>
+{% endblock %}
