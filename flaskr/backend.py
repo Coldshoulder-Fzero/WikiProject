@@ -6,9 +6,13 @@ from hashlib import sha256
 class Backend:
 
     def __init__(self, storage_client=storage.Client()):
+        '''Added admin bucket and bucket name to check when log in for admin permission'''
+
         self.user_bucket_name = 'theuserspasswords'
+        self.admin_bucket_name = 'theadminspasswords'
         self.content_bucket_name = 'thewikicontent'
         self.user_bucket = storage_client.bucket(self.user_bucket_name)
+        self.admin_bucket = storage_client.bucket(self.admin_bucket_name)
         self.content_bucket = storage_client.bucket(self.content_bucket_name)
 
     def get_wiki_page(self, name):
@@ -47,15 +51,20 @@ class Backend:
         return User(username)
 
     def sign_in(self, username, password):
+        '''Created admin blob to check in admin bucket'''
         blob = self.user_bucket.get_blob(username)
+        admin_blob = self.admin_bucket.get_blob(username)
         if blob is None:
             raise ValueError(f'Username {username} does not exist!')
 
         # create hashed string to compare with bucket contents
         expected_hashed_string = sha256(f'{username}:{password}'.encode()).hexdigest()
-        with blob.open() as b:
+        '''Comparing if the credentials are in either user or admin bucket and returning User or Admin, if not -> invalid user credentials'''
+        with blob.open() as b, admin_blob.open() as admin:
             if expected_hashed_string == b.read():
                 # successful login, return a User object
+                return User(username)
+            if expected_hashed_string == admin.read():
                 return User(username)
             else:
                 # failed login, throw error
