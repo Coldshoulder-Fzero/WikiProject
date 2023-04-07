@@ -11,7 +11,8 @@ URI             | Method | Description
 /pages/<page>   | GET    | Returns the page from backend.get_wiki_page
 """
 
-from flask import render_template, send_file 
+from flask import render_template, send_file
+
 
 # Note: pages.py relies on the backend to fulfill some routes so we need to
 # pass an instance of the backend (dependency injection)
@@ -36,14 +37,14 @@ def make_endpoints(app, backend):
             content = backend.get_wiki_page(page_name)
         except ValueError as ve:
             # return error to user if page is not foudn
-            return render_template(
-                'main.html',
-                page_name=page_name,
-                page_content=str(ve)
-            )
+            return render_template('main.html',
+                                   page_name=page_name,
+                                   page_content=str(ve))
 
         # render the show_page template with the title and content
-        return render_template('show_page.html', title=page_name, content=content)
+        return render_template('show_page.html',
+                               title=page_name,
+                               content=content)
 
     @app.route("/about")
     def about():
@@ -65,4 +66,3 @@ def make_endpoints(app, backend):
             image: the name of the image that we want
         """
         return send_file(backend.get_image(image), mimetype='image/jpeg')
-    

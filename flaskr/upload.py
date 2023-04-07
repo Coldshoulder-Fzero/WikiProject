@@ -10,6 +10,7 @@ URI     | Method | Description
 from flask import render_template, request, url_for, redirect
 from flask_login import login_required
 
+
 # Note: upload relies on the backend to fulfill some routes so we need to
 # pass an instance of the backend (i.e. dependency injection)
 def make_endpoints(app, backend):
@@ -31,7 +32,7 @@ def make_endpoints(app, backend):
         """
 
         return render_template('upload.html')
-    
+
     @app.route('/upload', methods=['POST'])
     @login_required
     def upload_page():
@@ -52,18 +53,15 @@ def make_endpoints(app, backend):
             return render_template(
                 'main.html',
                 page_name='Unable to Upload',
-                page_content='Need a file and name for the wiki page'
-            )
+                page_content='Need a file and name for the wiki page')
         try:
             # for now, we assume that we are uploading text files so we need to
             # take the string contents of the file and upload it to the bucket
             backend.upload(wiki_name, wiki_content.stream.read())
         except ValueError as ve:
             # upload failed in the backend, return an error page to the user
-            return render_template(
-                'main.html',
-                page_name='Upload Failed!',
-                page_content=str(ve)
-            )
+            return render_template('main.html',
+                                   page_name='Upload Failed!',
+                                   page_content=str(ve))
         # redirect the user to the new wiki page that they uploaded
         return redirect(url_for('show_page', page_name=wiki_name))
