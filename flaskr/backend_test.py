@@ -62,6 +62,14 @@ uses the make_bucket() helper method that we defined above.
 def user_bucket(blob):
     return make_bucket(blob)
 
+'''
+This fixture will mock the admin bucket. It is using make_bucket method for creating a mocked bucket object
+'''
+
+@pytest.fixture
+def admin_bucket(blob):
+    return make_bucket(blob)
+
 """
 This fixture helps us mock the Backend class. We will mock the storage client 
 and set the two buckets to the mocked bucket objects we created in the fixtures 
@@ -78,7 +86,7 @@ def backend(user_bucket, content_bucket):
     to be a list, each call to storage_client.bucket() will return the next 
     mocked object in the list.
     """
-    storage_client.bucket.side_effect = [user_bucket, content_bucket]
+    storage_client.bucket.side_effect = [user_bucket, content_bucket, admin_bucket]
     return Backend(storage_client=storage_client)
 
 def test_get_wiki_page_success(backend, content_bucket, file_stream):
@@ -197,3 +205,32 @@ def test_sign_in_bad_password(hash, backend, user_bucket, blob, file_stream):
     user_bucket.get_blob.assert_called_with("test_user")
     blob.open.assert_called_with()
     hash.assert_called_with("test_user:bad password".encode())
+
+'''
+Will mock an admin test by passing another hashed password. 
+First method tests for a successfull admin log in
+Second method tests for unsuccessfull admin log in
+'''
+@patch('flaskr.backend.sha256', return_value=sha256("admin hash"))
+def test_sign_in_admin_success(hash, backend, admin_bucket, blob, file_stream):
+    file_stream.read.return_value= "admin hash"
+
+    admin = backend.sign_in("admin_user", "testing123")
+
+    admin_bucket.get_blob.assert_called_with("admin_user")
+    blob.open.assert_called_with()
+    hash.assert_called_with("admin_user:testing123".encode())
+    assert admin.username == "admin_user"
+
+@patch('flask.backend.sha256', return_value=sha256("user hash"))
+def test_sign_in_admin_fail(hash, backend,admin_bucket, blob, filestream):
+    file_stream.read.return_value = "admin hash"
+    try:
+        backend.sign_in("admin_user", "user123")
+    except ValueError as v:
+        assert str(v) == "Invadid password for username admin_user!"
+    
+    admin_bucket.get_blob.assert_called_with("admin_user")
+    blob.open.assert_called_with()
+    hash.assert_called_with("admin_user:user123".encode())
+
