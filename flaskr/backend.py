@@ -21,6 +21,10 @@ class Backend:
             with blob.open() as b:
                 return b.read()
 
+    def save_wiki_page(self, page_name, content):
+        blob = self.content_bucket.blob(page_name)
+        blob.upload_from_string(content)
+
     def get_all_page_names(self):
         blobs = self.content_bucket.list_blobs()
         # we should ignore any blobs that are images
@@ -75,3 +79,5 @@ class Backend:
         else:
             with blob.open('rb') as b:
                 return BytesIO(b.read())
+
+ 
