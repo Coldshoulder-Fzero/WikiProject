@@ -11,7 +11,7 @@ URI             | Method | Description
 /pages/<page>   | GET    | Returns the page from backend.get_wiki_page
 """
 
-from flask import render_template, send_file
+from flask import render_template, send_file, request, redirect, url_for
 
 
 # Note: pages.py relies on the backend to fulfill some routes so we need to
@@ -29,7 +29,22 @@ def make_endpoints(app, backend):
         # Display a list of all the pages
         list_of_pages = backend.get_all_page_names()
         return render_template('pages.html', pages=list_of_pages)
+    
+    @app.route('/save_changes', methods=['POST'])
+    def save_changes():
+        page_name = request.form['page_name']
+        content = request.form['content']
+        print("Page Name:", page_name)
+        print("Content:", content)
 
+        # Check if the page_name value is not empty
+       
+
+        # Save content using the backend object
+        backend.save_wiki_page(page_name, content)
+        # Redirect to the updated page after saving
+        return redirect(url_for('show_page', page_name=page_name))
+        
     @app.route('/pages/<page_name>')
     def show_page(page_name):
         # get the content from the backend
