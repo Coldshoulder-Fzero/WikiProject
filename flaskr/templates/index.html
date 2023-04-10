@@ -18,8 +18,23 @@ About This Wiki
             <a href="{{ url_for('page9') }}">page9</a>
         </nav>
     </ul>
-  
-  
+
+    <h1>Edit Wiki</h1>
+    <form id="editForm" method="POST">
+        <textarea name="wiki_content" rows="10" cols="50">Enter wiki content here...</textarea><br>
+        <input type="submit" value="Submit Changes">
+    </form>
+
+    <script>
+        function confirmSubmit(event) {
+            event.preventDefault();
+            if (confirm("Are you sure you want to submit these changes?")) {
+                document.getElementById("editForm").submit();
+            }
+        }
+
+        document.getElementById("editForm").addEventListener("submit", confirmSubmit);
+    </script>
 {% endblock %}
 
 <!-- <a href="{{ url_for('logout') }}">Logout</a> -->

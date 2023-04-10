@@ -5,5 +5,42 @@
 {% endblock %}
 
 {% block content %}
-    <div>{{ content }}</div>
+    <div class="page-content">
+        {{ content }}
+    </div>
+    <button class="edit-page">Edit</button>
+
+    <!-- Add a modal for editing the wiki page -->
+    <div id="edit-modal" style="display: none;">
+        <h2>Edit Wiki Page</h2>
+        <form id="edit-form" action="{{ url_for('save_changes', page_name=page_name) }}" method="post">
+            <input type="hidden" name="page_name" id="page_name" value="{{ page_name }}">
+            <textarea name="content" id="content" rows="10" cols="30">{{ content }}</textarea><br>
+            <button type="submit">Save changes</button>
+            <button type="button" id="close-modal">Cancel</button>
+        </form>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const pageName = "{{ page_name }}";
+
+    $(document).ready(function () {
+        console.log("Page name (from template):", pageName);
+
+        $(".edit-page").on("click", function () {
+            const currentPageName = $("#page_name").val();
+            console.log("Page name (from input):", currentPageName);
+
+          
+                $("#edit-modal").show();
+            
+        });
+
+        $("#close-modal").on("click", function () {
+            $("#edit-modal").hide();
+        });
+    });
+</script>
 {% endblock %}
