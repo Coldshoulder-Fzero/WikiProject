@@ -10,8 +10,11 @@ URI             | Method | Description
 /pages          | GET    | Returns all of the pages in a list via backend.get_all_page_names
 /pages/<page>   | GET    | Returns the page from backend.get_wiki_page
 """
-
+"""
+added login_required to make sure that only autherized users can edit
+"""
 from flask import render_template, send_file, request, redirect, url_for
+from flask_login import login_required
 
 
 # Note: pages.py relies on the backend to fulfill some routes so we need to
@@ -31,6 +34,7 @@ def make_endpoints(app, backend):
         return render_template('pages.html', pages=list_of_pages)
     
     @app.route('/save_changes', methods=['POST'])
+    @login_required
     def save_changes():
         page_name = request.form['page_name']
         content = request.form['content']
