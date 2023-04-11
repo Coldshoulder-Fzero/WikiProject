@@ -2,6 +2,7 @@ from flaskr.user import User
 from google.cloud import storage
 from io import BytesIO
 from hashlib import sha256
+import datetime
 
 
 class Backend:
@@ -21,7 +22,12 @@ class Backend:
             with blob.open() as b:
                 return b.read()
 
+
+
+
     def save_wiki_page(self, page_name, content):
+        print("Saving wiki page:", page_name)
+        print("Content:", content)
         blob = self.content_bucket.blob(page_name)
         blob.upload_from_string(content)
 
@@ -79,5 +85,17 @@ class Backend:
         else:
             with blob.open('rb') as b:
                 return BytesIO(b.read())
+    def get_previous_versions(self, page_name):
+        history_blobs = sorted(
+            [blob for blob in self.content_bucket.list_blobs(prefix=f'history/{page_name}')],
+            key=lambda x: x.name,
+            reverse=True
+        )
+        if not history_blobs:
+            return None, None, None
+        
+        latest_history_blob = history_blobs[0]
+        _, _, timestamp, username = latest_history_blob.name[:-4].split('-') # Remove '.txt' and split
+        return latest_history_blob.download_as_text(), timestamp, username
 
  

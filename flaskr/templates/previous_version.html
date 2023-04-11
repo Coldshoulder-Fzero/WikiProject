@@ -1,0 +1,15 @@
+{% extends 'main.html' %}
+
+{% block page_name %}
+{{ title }} - Previous Version
+{% endblock }
+
+{% block content %}
+    <h2> Previous Version </h2>
+    <p>Last edited by {{ username }} at {{ timestamp }} </p>
+    <div class="page-content">
+        {{ content }} 
+    </div>
+    <a href="{{ url_for('show_page', page_name=title) }}">Back to the current version</a>
+{% endblcok %}
+

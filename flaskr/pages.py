@@ -12,6 +12,7 @@ URI             | Method | Description
 """
 
 from flask import render_template, send_file, request, redirect, url_for
+from flask_login import  login_required, current_user
 
 
 # Note: pages.py relies on the backend to fulfill some routes so we need to
@@ -38,30 +39,41 @@ def make_endpoints(app, backend):
         print("Content:", content)
 
         # Check if the page_name value is not empty
-       
+        if not page_name.strip():
+            return "Error: Page name cannot be empty", 400
 
         # Save content using the backend object
         backend.save_wiki_page(page_name, content)
         # Redirect to the updated page after saving
         return redirect(url_for('show_page', page_name=page_name))
-        
+
+    @app.route('/pages/<page_name>/previous_version')
+    @login_required
+    def show_previous_version(page_name):
+        content, timestamp, username = backend.get_previous_versions(page_name)
+        if content is None:
+            return "No previous version found", 404
+
+        return render_template('previous_version.html', title=page_name, content=content, timestamp=timestamp, username=username)
+
     @app.route('/pages/<page_name>')
     def show_page(page_name):
         # get the content from the backend
         try:
             content = backend.get_wiki_page(page_name)
         except ValueError as ve:
-            # return error to user if page is not foudn
+            # return error to user if page is not found
             return render_template('main.html',
-                                   page_name=page_name,
-                                   page_content=str(ve))
+                                page_name=page_name,
+                                content=str(ve))
 
         # render the show_page template with the title and content
         return render_template('show_page.html',
-                               title=page_name,
-                               content=content,
-                               page_name=page_name                               
-                               )
+                            title=page_name,
+                            content=content,
+                            page_name=page_name
+                            )
+
 
     @app.route("/about")
     def about():
