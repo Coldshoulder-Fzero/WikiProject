@@ -59,7 +59,9 @@ def make_endpoints(app, backend):
         # render the show_page template with the title and content
         return render_template('show_page.html',
                                title=page_name,
-                               content=content)
+                               content=content,
+                               page_name=page_name                               
+                               )
 
     @app.route("/about")
     def about():
