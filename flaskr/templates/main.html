@@ -27,6 +27,11 @@
             <a href="{{ url_for('login') }}">Login</a>
             <a href="{{ url_for('signup') }}">Sign Up</a>
             {% endif %}
+            <form method="GET" action="{{ url_for('search') }}">
+                <label for="query">Search query:</label>
+                <input type="text" id="query" name="query" required>
+                <button type="submit">Search</button>
+              </form>
         </nav>
         <h3> Welcome to the wiki!!!  It's about video game history</h3>  
     </header>

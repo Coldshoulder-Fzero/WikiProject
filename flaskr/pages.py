@@ -11,7 +11,7 @@ URI             | Method | Description
 /pages/<page>   | GET    | Returns the page from backend.get_wiki_page
 """
 
-from flask import render_template, send_file
+from flask import render_template, send_file, request
 
 
 # Note: pages.py relies on the backend to fulfill some routes so we need to
@@ -66,3 +66,9 @@ def make_endpoints(app, backend):
             image: the name of the image that we want
         """
         return send_file(backend.get_image(image), mimetype='image/jpeg')
+    
+    @app.route('/search')
+    def search():
+        query = request.args.get('query')
+        search_results = backend.search(query)
+        return render_template('search-results.html', results=search_results)

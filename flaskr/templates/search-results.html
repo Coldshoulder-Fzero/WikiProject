@@ -1,0 +1,28 @@
+{% extends "main.html" %}
+
+{% block page_name %}
+Search
+{% endblock %}
+
+{% block content %}
+    {% if results %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Page Name</th>
+                    <th>Content</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for page in results %}
+                    <tr>
+                        <td><a href="{{ url_for('view_page', page_id=page['id']) }}">{{ page['name'] }}</a></td>
+                        <td>{{ page['content'] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No results found.</p>
+    {% endif %}
+{% endblock %}
