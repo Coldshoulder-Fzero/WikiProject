@@ -1,9 +1,9 @@
 /* ---------------------------------------------------------------------------------Font animation--------------------------------------------------------------------------------- */
 .wrapper.textSl{
-    background-color: #9ba5b4;
-    width: 20px;
+    background-color: #9ba5b48b;
     font-size: 2rem;
     font-family: "Play", sans-serif;
+    
 }
 
 .textSl .type{
@@ -18,7 +18,7 @@
     margin: 2rem auto;
     white-space: nowrap;
     overflow:hidden;
-    animation: typing 2s steps(13, end), blink-caret 0.2s step-end infinite alternate;
+    animation: typing 2s steps(20, end), blink-caret 0.2s step-end infinite alternate;
 }
 
 @-webkit-keyframes typing{
@@ -37,7 +37,11 @@
 /* ---------------------------------------------------------------------------Slider style and animation--------------------------------------------------------------------------- */
 /* Adding style to slider */
 .slider-container{
+    margin-left: 35em;
     border-style : groove;   
+    justify-content: center;
+    align-items: center;
+    width: 500px;
 
 }
 .slider-title{
@@ -46,16 +50,15 @@
 }
 .slider{
     position: relative;
-    width: 20%;
+    width: 60%;   
+    left:80px; 
     overflow: hidden;
-    bottom: 20%;
-    left: 40%;
+
 }
 
 /* Adding formatted display to all images */
 .images{
     display: flex;
-    width:100%;
 }
 
 /* calling all images and assigning a width and height */
