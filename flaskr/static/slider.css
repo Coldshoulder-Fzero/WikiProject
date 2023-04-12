@@ -1,0 +1,141 @@
+/* ---------------------------------------------------------------------------------Font animation--------------------------------------------------------------------------------- */
+.wrapper.textSl{
+    background-color: #9ba5b4;
+    font-size: 2rem;
+    font-family: "Play", sans-serif;
+}
+
+.textSl .type{
+    padding: 2rem 1rem;
+    width:auto;
+    margin: auto;
+}
+
+.textSl p{
+    width: 30ch;
+    border-right: 4px solid black; 
+    margin: 2rem auto;
+    white-space: nowrap;
+    overflow:hidden;
+    animation: typing 2s steps(20, end), blink-caret 0.2s step-end infinite alternate;
+}
+
+@-webkit-keyframes typing{
+    from{
+        width:0px;
+    }
+}
+@-webkit-keyframes blink-caret{
+    50%{
+        border-color:transparent;
+    }
+}
+
+
+
+/* ---------------------------------------------------------------------------Slider style and animation--------------------------------------------------------------------------- */
+/* Adding style to slider */
+.slider-container{
+    border-style : groove;   
+
+}
+.slider-title{
+    font-size:25px;
+    text-align: center;
+}
+.slider{
+    position: relative;
+    width: 20%;
+    overflow: hidden;
+    bottom: 20%;
+    left: 40%;
+}
+
+/* Adding formatted display to all images */
+.images{
+    display: flex;
+    width:100%;
+}
+
+/* calling all images and assigning a width and height */
+.images{
+    height: 400px;
+    width: 100%;
+    transition: all 00.35s linear;
+}
+
+
+/* hidding input fields  */
+.images input{
+    display: none;
+}
+
+/* adding spacing to decorators */
+.decorators{
+    display: flex;
+    justify-content: center;
+    margin: 10px;
+}
+
+/* making the decorators white circles and add transition */
+.decorators label{
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    margin-left: 5px;
+    border: solid rgb(89, 81, 81) 3px;
+    cursor: pointer;
+    transition: all 0.35s linear;
+}
+
+/* when hovering on the white circles, fill them with white color */
+.decorators label:hover{
+    background: rgba(78, 75, 75, 0.67);
+}
+
+/*  following lines link the inputs on main with the corresponding images in order to be shown. 
+    documentation -> https://developer.mozilla.org/en-US/docs/Web/CSS/:checked */
+#img1:checked ~ .im1{
+    margin-left: 0;
+}
+
+
+#img2:checked ~ .im2{
+    margin-left: -100%;
+}
+
+#img3:checked ~ .im3{
+    margin-left: -200%;
+}
+
+#img4:checked ~ .im4{
+    margin-left: -300%;
+}
+
+#img5:checked ~ .im5{
+    margin-left: -350%;
+}
+
+#img6:checked ~ .im6{
+    margin-left: -350%;
+}
+
+#img7:checked ~ .im7{
+    margin-left: -350%;
+}
+
+#img8:checked ~ .im8{
+    margin-left: -350%;
+}
+
+#img9:checked ~ .im9{
+    margin-left: -350%;
+}
+
+#img10:checked ~ .im10{
+    margin-left: -350%;
+}
+
+#img11:checked ~ .im11{
+    margin-left: -350%;
+}
