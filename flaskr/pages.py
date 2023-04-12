@@ -68,6 +68,15 @@ def make_endpoints(app, backend):
                                 content=content,
                                 page_name=page_name)
 
+    @app.route('/pages/<page_name>/showing_previous_version', methods=['GET'])
+    @login_required
+    def showing_previous_version(page_name)
+        content, timestamp, username = backend.get_previous_version(page_name)
+            
+        if content is None or timestamp is None or username is None:
+            return "No previous version found", 404
+
+        return render_template('showing_previous_version.html', page_name=page_name, content=content, timestamp=timestamp, username=username)
 
     @app.route("/page/<page_name>/previous", methods=["GET", "POST"], endpoint='show_previous_version')
     @login_required

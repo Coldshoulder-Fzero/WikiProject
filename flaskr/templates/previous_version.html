@@ -3,14 +3,19 @@
 {% block content %}
   <h1>Previous Versions of {{ page_name }}</h1>
   <ul>
-    {% for prev_version_id, timestamp, username in previous_versions %}
-      <li>
-        {{ timestamp }} by {{ username }}
-        <form action="{{ url_for('replace_with_previous_version', page_name=page_name) }}" method="post">
-          <input type="hidden" name="prev_version_id" value="{{ prev_version_id }}">
-          <button type="submit">Make this the current version</button>
-        </form>
-      </li>
-    {% endfor %}
+    {% for version in previous_versions %}
+    <tr>
+        <td>{{ version[1] }}</td>
+        <td>{{ version[2] }}</td>
+        <td>
+            <a href="{{ url_for('view_previous_version', page_name=page_name) }}">View</a>
+            <form action="{{ url_for('replace_with_previous_version', page_name=page_name) }}" method="POST" style="display:inline;">
+                <input type="hidden" name="prev_version_id" value="{{ version[0] }}">
+                <button type="submit" class="btn btn-link" style="padding:0;">Revert</button>
+            </form>
+        </td>
+    </tr>
+{% endfor %}
+
   </ul>
 {% endblock %}
