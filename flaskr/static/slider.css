@@ -1,6 +1,7 @@
 /* ---------------------------------------------------------------------------------Font animation--------------------------------------------------------------------------------- */
 .wrapper.textSl{
     background-color: #9ba5b4;
+    width: 20px;
     font-size: 2rem;
     font-family: "Play", sans-serif;
 }
@@ -17,7 +18,7 @@
     margin: 2rem auto;
     white-space: nowrap;
     overflow:hidden;
-    animation: typing 2s steps(20, end), blink-caret 0.2s step-end infinite alternate;
+    animation: typing 2s steps(13, end), blink-caret 0.2s step-end infinite alternate;
 }
 
 @-webkit-keyframes typing{
