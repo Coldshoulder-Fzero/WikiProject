@@ -10,7 +10,7 @@
     </div>
     <button class="edit-page">Edit</button>
     <!-- Add the link to the previous version -->
-    <a href="{{ url_for('show_previous_version', page_name=title) }}">View previous version</a>
+    <a href="{{ url_for('show_previous_version', page_name=page_name, prev_version_id=prev_version_id) }}">View previous version</a>
 
     <!-- Add a modal for editing the wiki page -->
     <div id="edit-modal" style="display: none;">
@@ -35,7 +35,7 @@
             const currentPageName = $("#page_name").val();
             console.log("Page name (from input):", currentPageName);
 
-          
+            
                 $("#edit-modal").show();
             
         });

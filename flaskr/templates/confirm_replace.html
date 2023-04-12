@@ -1,0 +1,23 @@
+{% extends 'main.html' %}
+
+{% block page_name %}
+Confirm Replacement
+{% endblock %}
+
+{% block content %}
+    <h2>Replace current version with the selected previous version?</h2>
+    <form id="replace-form" action="{{ url_for('replace_with_previous_version', page_name=page_name) }}" method="post">
+        <input type="hidden" name="page_name" value="{{ page_name }}">
+        <input type="hidden" name="prev_version_id" value="{{ prev_version_id }}">
+        <button type="submit">Confirm</button>
+    </form>
+    <button id="cancel">Cancel</button>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $("#cancel").on("click", function () {
+        window.location.href = "{{ url_for('show_page', page_name=page_name) }}";
+    });
+</script>
+{% endblock %}

@@ -13,7 +13,7 @@ URI             | Method | Description
 """
 added login_required to make sure that only autherized users can edit
 """
-from flask import render_template, send_file, request, redirect, url_for
+from flask import render_template, send_file, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 
 
@@ -69,16 +69,20 @@ def make_endpoints(app, backend):
                                 page_name=page_name)
 
 
-    @app.route('/pages/<page_name>/previous_version')
+    @app.route("/page/<page_name>/previous", methods=["GET", "POST"], endpoint='show_previous_version')
     @login_required
-    def show_previous_version(page_name):
+    def replace_with_previous_version(page_name):
+        if backend.revert_to_previous(page_name, current_user.username):
+            flash('Page reverted to the previous version.')
+        else:
+            flash('No previous version available to revert to.')
+        return redirect(url_for('show_page', page_name=page_name))
 
-        content, timestamp, username = backend.get_previous_version(page_name)
-        
-        if content is None or timestamp is None or username is None:
-            return "No previous version found", 404
-
-        return render_template('previous_version.html', title=page_name, content=content, timestamp=timestamp, username=username)
+            
+    @app.route('/pages/<page_name>/previous_versions')
+    def previous_versions(page_name):
+        previous_versions = backend.get_all_previous_versions(page_name)
+        return render_template('previous_versions.html', page_name=page_name, previous_versions=previous_versions)
     
     @app.route("/about")
     def about():
