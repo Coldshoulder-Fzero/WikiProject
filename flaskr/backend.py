@@ -2,7 +2,8 @@ from flaskr.user import User
 from google.cloud import storage
 from io import BytesIO
 from hashlib import sha256
-import datetime
+from datetime import datetime
+import re
 
 
 class Backend:
@@ -22,9 +23,43 @@ class Backend:
             with blob.open() as b:
                 return b.read()
 
-    def save_wiki_page(self, page_name, content):
+    def save_wiki_page(self, page_name, content, username):
+        # Save the current version to the history folder
+        if self.content_bucket.blob(page_name).exists():
+            current_content = self.get_wiki_page(page_name)
+            current_time = datetime.now()
+            formatted_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
+            timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
+            history_blob = self.content_bucket.blob(f'history/{page_name}-{timestamp}-{username}.txt')
+            history_blob.upload_from_string(current_content)
+
+        # Save the new version
         blob = self.content_bucket.blob(page_name)
         blob.upload_from_string(content)
+
+    def get_previous_version(self, page_name):
+        history_blobs = sorted(
+            [blob for blob in self.content_bucket.list_blobs(prefix=f'history/{page_name}')],
+            key=lambda x: x.name,
+            reverse=True
+        )
+
+        if not history_blobs:
+            return None, None, None
+
+        latest_history_blob = history_blobs[0]
+
+        split_list = re.split('/|-', latest_history_blob.name[:-4])
+
+        if len(split_list) >= 4:
+            _, _, timestamp, username = split_list
+            timestamp = datetime.strptime(timestamp, "%Y%m%d%H%M%S").strftime("%Y-%m-%d %H:%M:%S")
+        else:
+            timestamp, username = None, None
+
+        return latest_history_blob.download_as_text(), timestamp, username
+
+
 
     def get_all_page_names(self):
         blobs = self.content_bucket.list_blobs()

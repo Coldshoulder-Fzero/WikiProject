@@ -14,7 +14,7 @@ URI             | Method | Description
 added login_required to make sure that only autherized users can edit
 """
 from flask import render_template, send_file, request, redirect, url_for
-from flask_login import login_required
+from flask_login import login_required, current_user
 
 
 # Note: pages.py relies on the backend to fulfill some routes so we need to
@@ -42,10 +42,12 @@ def make_endpoints(app, backend):
         print("Content:", content)
 
         # Check if the page_name value is not empty
-       
+        if not page_name:
+            return "Error: Page name cannot be empty."
 
         # Save content using the backend object
-        backend.save_wiki_page(page_name, content)
+        backend.save_wiki_page(page_name, content, current_user.username)
+        
         # Redirect to the updated page after saving
         return redirect(url_for('show_page', page_name=page_name))
         
@@ -66,6 +68,18 @@ def make_endpoints(app, backend):
                                 content=content,
                                 page_name=page_name)
 
+
+    @app.route('/pages/<page_name>/previous_version')
+    @login_required
+    def show_previous_version(page_name):
+
+        content, timestamp, username = backend.get_previous_version(page_name)
+        
+        if content is None or timestamp is None or username is None:
+            return "No previous version found", 404
+
+        return render_template('previous_version.html', title=page_name, content=content, timestamp=timestamp, username=username)
+    
     @app.route("/about")
     def about():
         return render_template('about.html')
