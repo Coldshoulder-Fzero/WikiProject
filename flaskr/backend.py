@@ -77,27 +77,12 @@ class Backend:
                 return BytesIO(b.read())
 
     def search(self, query):
-        """
-        Searches for pages in the Google Cloud Storage bucket that contain the given query string.
-        Returns a list of matching page titles.
-        """
-        query = query.lower()  # convert query to lowercase for case-insensitive search
-        pages = []
-        
-        # Loop through all blobs in the content bucket
-        for blob in self.content_bucket.list_blobs():
-            # Read the content of the blob
-            content = blob.download_as_bytes()
-            # Compute the SHA-256 hash of the content
-            hash = sha256(content).hexdigest()
-            
-            # Check if the hash matches the blob's name (which is the page title)
-            if hash == blob.name:
-                # Decode the content from bytes to string
-                text = content.decode('utf-8')
-                # Check if the query appears in the text
-                if query in text.lower():
-                    # Add the page title to the list of matching pages
-                    pages.append(blob.name)
-        
-        return pages
+        blobs = self.content_bucket.list_blobs()
+        results = []
+        for blob in blobs:
+            with blob.open() as b:
+                content = b.read()
+                if query.lower() in content.lower():
+                    results.append(blob.name.split('/')[-1])
+
+        return results
