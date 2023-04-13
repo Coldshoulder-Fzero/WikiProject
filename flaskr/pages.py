@@ -67,6 +67,8 @@ def make_endpoints(app, backend):
         """
         return send_file(backend.get_image(image), mimetype='image/jpeg')
     
+    # try and use content_type at the end of blob
+
     @app.route('/search')
     def search():
         query = request.args.get('query')

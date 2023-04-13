@@ -80,9 +80,10 @@ class Backend:
         blobs = self.content_bucket.list_blobs()
         results = []
         for blob in blobs:
-            with blob.open() as b:
-                content = b.read()
-                if query.lower() in content.lower():
-                    results.append(blob.name.split('/')[-1])
-
+            if blob.content_type not in ('png', 'jpg', 'jpeg'):
+                print('+' + blob.content_type + '++')                
+                with blob.open('rb') as b:
+                    content = b.read()
+                    if query.lower() in content.lower():
+                        results.append(blob.name.split('/')[-1])
         return results
