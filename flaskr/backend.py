@@ -75,3 +75,14 @@ class Backend:
         else:
             with blob.open('rb') as b:
                 return BytesIO(b.read())
+
+    def search(self, query):
+        blobs = self.content_bucket.list_blobs()
+        results = []
+        for blob in blobs:
+            if blob.content_type not in ('image/jpeg', 'image/jpg', 'image/png'):                
+                with blob.open() as b:
+                    content = b.read()
+                    if query.lower() in content.lower():
+                        results.append(blob.name.split('/')[-1])
+        return results
