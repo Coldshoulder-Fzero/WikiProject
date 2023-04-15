@@ -76,6 +76,7 @@ class Backend:
             with blob.open('rb') as b:
                 return BytesIO(b.read())
 
+
     def search(self, query):
         blobs = self.content_bucket.list_blobs()
         results = []
