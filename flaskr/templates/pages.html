@@ -5,11 +5,26 @@ Pages in the Wiki
 {% endblock %}
 
 {% block content %}
+    <head>
+        <link rel="stylesheet" href="/static/pages.css" />
+    </head>
     <nav style="display: block;">
         <ul>
             <!-- for loop over all the pages -->
             {% for page in pages %}
-            <li><a href="{{ url_for('show_page', page_name=page) }}">{{page}}</a></li>
+            <li>
+                <button style=
+                "margin: 5px; 
+                background-color: lightskyblue; 
+                display: block; 
+                width: 100%; 
+                font-size: 15px;
+                border-radius: 5px;
+                "
+                >
+                    <a href="{{ url_for('show_page', page_name=page) }}">{{page}}</a>
+                </button>
+            </li>
             {% endfor %}
         </ul>
     </nav>
