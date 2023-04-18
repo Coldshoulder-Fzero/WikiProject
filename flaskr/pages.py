@@ -66,9 +66,3 @@ def make_endpoints(app, backend):
             image: the name of the image that we want
         """
         return send_file(backend.get_image(image), mimetype='image/jpeg')
-    
-    @app.route('/search')
-    def search():
-        query = request.args.get('query')
-        search_results = backend.search(query)
-        return render_template('search-results.html', results=search_results)
