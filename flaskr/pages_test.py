@@ -143,3 +143,47 @@ def test_showing_previous_version(mock_get_previous_version, client):
     assert b"Previous content" in resp.data
     assert b"2023-04-18 12:00:00" in resp.data
     assert b"user1" in resp.data
+
+    
+def test_show_page(client):
+    with patch("flaskr.backend.Backend.get_wiki_page", return_value="Page Content") as mock_get_wiki_page:
+        resp = client.get("/pages/example")
+        assert resp.status_code == 200
+        assert b"example" in resp.data
+        assert b"Page Content" in resp.data
+        mock_get_wiki_page.assert_called_once_with("example")
+
+
+def test_replace_with_previous_version(client, app):
+    with app.test_request_context():
+        app.preprocess_request()
+        with patch("flaskr.backend.Backend.revert_to_previous", return_value=True) as mock_revert_to_previous:
+            resp = client.post("/page/example/previous")
+            assert resp.status_code == 302
+            assert resp.location.endswith("/pages/example")
+            mock_revert_to_previous.assert_called_once_with("example", "testuser")
+
+
+def test_previous_versions(client):
+    with patch("flaskr.backend.Backend.get_all_previous_versions") as mock_get_all_previous_versions:
+        mock_get_all_previous_versions.return_value = [
+            {"timestamp": datetime.datetime.now(), "username": "testuser"},
+            {"timestamp": datetime.datetime.now() - datetime.timedelta(days=1), "username": "anotheruser"}
+        ]
+        resp = client.get("/pages/example/previous_versions")
+        assert resp.status_code == 200
+        assert b"Previous versions of" in resp.data
+        assert b"example" in resp.data
+
+
+# ... (keep the existing tests) ...
+
+
+@patch("flaskr.backend.Backend.save_wiki_page")
+def test_save_changes(mock_save_wiki_page, client, app):
+    with app.test_request_context():
+        app.preprocess_request()
+        resp = client.post("/save_changes", data={"page_name": "example", "content": "New content"})
+        assert resp.status_code == 302
+        assert resp.location.endswith("/pages/example")
+        mock_save_wiki_page.assert_called_once_with("example", "New content", "testuser")

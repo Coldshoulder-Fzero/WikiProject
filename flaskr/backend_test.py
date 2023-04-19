@@ -229,3 +229,74 @@ def test_sign_in_bad_password(hash, backend, user_bucket, blob, file_stream):
     blob.open.assert_called_with()
     hash.assert_called_with("test_user:bad password".encode())
 
+def test_save_wiki_page_new(backend, content_bucket, blob, file_stream):
+    content_bucket.blob.return_value.exists.return_value = False
+    content_bucket.get_blob.return_value = blob
+
+    backend.save_wiki_page("test", "test content", "test_user")
+
+    content_bucket.blob.assert_called_with("test")
+    blob.upload_from_string.assert_called_with("test content")
+
+
+def test_save_wiki_page_existing(backend, content_bucket, blob, file_stream):
+    content_bucket.blob.return_value.exists.return_value = True
+    file_stream.read.return_value = "existing content"
+
+    backend.save_wiki_page("test", "new content", "test_user")
+
+    content_bucket.blob.assert_called_with("history/test-")
+    blob.upload_from_string.assert_called_with("existing content")
+    content_bucket.blob.assert_called_with("test")
+    blob.upload_from_string.assert_called_with("new content")
+
+
+def test_get_previous_version(backend, content_bucket, blob):
+    history_blobs = [MagicMock() for _ in range(3)]
+    for i, b in enumerate(history_blobs):
+        b.name = f"history/test-{i}"
+        b.download_as_text.return_value = f"version {i}"
+    content_bucket.list_blobs.return_value = history_blobs
+
+    content, timestamp, username = backend.get_previous_version("test")
+
+    content_bucket.list_blobs.assert_called_with(prefix='history/test')
+    assert content == "version 2"
+    assert timestamp is not None
+    assert username == "test_user"
+
+
+def test_revert_to_previous_success(backend, content_bucket, blob):
+    history_blobs = [MagicMock() for _ in range(3)]
+    for i, b in enumerate(history_blobs):
+        b.name = f"history/test-{i}"
+        b.download_as_text.return_value = f"version {i}"
+    content_bucket.list_blobs.return_value = history_blobs
+
+    result = backend.revert_to_previous("test", "test_user")
+
+    assert result is True
+
+
+def test_revert_to_previous_failure(backend, content_bucket, blob):
+    content_bucket.list_blobs.return_value = []
+
+    result = backend.revert_to_previous("test", "test_user")
+
+    assert result is False
+
+
+def test_get_all_previous_versions(backend, content_bucket, blob):
+    history_blobs = [MagicMock() for _ in range(5)]
+    for i, b in enumerate(history_blobs):
+        b.name = f"history/test-{i}-test_user.txt"
+    content_bucket.list_blobs.return_value = history_blobs
+
+    versions = backend.get_all_previous_versions("test")
+
+    content_bucket.list_blobs.assert_called_with(prefix="history/test")
+    assert len(versions) == 5
+    for i, (name, timestamp, username) in enumerate(versions):
+        assert name == f"history/test-{i}-test_user.txt"
+        assert timestamp is not None
+        assert username == "test_user"
