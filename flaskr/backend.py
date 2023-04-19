@@ -97,3 +97,4 @@ class Backend:
         latest_history_blob = history_blobs[0]
         _, _, timestamp, username = latest_history_blob.name[:-4].split('-') # Remove '.txt' and split
         return latest_history_blob.download_as_text(), timestamp, username
+        
