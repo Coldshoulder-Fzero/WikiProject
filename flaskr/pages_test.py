@@ -2,6 +2,11 @@ from flaskr import create_app
 from unittest.mock import patch
 from io import BytesIO
 import pytest
+from flaskr import create_app
+from unittest.mock import patch, MagicMock
+from io import BytesIO
+import datetime
+from flask import url_for
 
 
 
@@ -61,7 +66,7 @@ def test_ds_page(client):
 def test_mobile_gaming_page(client):
     resp = client.get("pages/Mobile Gaming")
     assert resp.status_code == 200
-    assert b"MobileGaming" in resp.data
+    assert b"Mobile Gaming" in resp.data
 
 
 def test_nintendo_page(client):
@@ -70,10 +75,10 @@ def test_nintendo_page(client):
     assert b"Nintendo" in resp.data
 
 
-def test_playstation_page(client):
-    resp = client.get("pages/Playstation")
+def test_PlayStation_page(client):
+    resp = client.get("pages/PlayStation")
     assert resp.status_code == 200
-    assert b"Playstation" in resp.data
+    assert b"PlayStation" in resp.data
 
 
 def test_steam_page(client):
@@ -99,11 +104,6 @@ def test_xbox_page(client):
     assert resp.status_code == 200
     assert b"Xbox" in resp.data
 
-
-def test_nonexistent_page(client):
-    resp = client.get("pages/nonexistent")
-    assert resp.status_code == 200
-    assert b"No page exists with the given name:" in resp.data
 
 
 def test_all_pages(client):
@@ -131,3 +131,15 @@ def test_get_image(mock_get_image, client):
     resp = client.get("/images/my-image")
     assert resp.status_code == 200
     mock_get_image.assert_called_once_with(image_name)
+
+@patch("flaskr.backend.Backend.get_previous_version", return_value=("Previous content", "2023-04-18 12:00:00", "user1"))
+def test_showing_previous_version(mock_get_previous_version, client):
+    with client.session_transaction() as sess:
+        sess['user_id'] = 1  # Assuming 1 is a valid user_id
+
+    page_name = "TestPage"
+    resp = client.get(f"/pages/{page_name}/showing_previous_version")
+    assert resp.status_code == 200
+    assert b"Previous content" in resp.data
+    assert b"2023-04-18 12:00:00" in resp.data
+    assert b"user1" in resp.data

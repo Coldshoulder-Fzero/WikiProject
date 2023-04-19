@@ -1,14 +1,17 @@
 """Creates all the endpoints related to retrieving content.
- 
+
 The following endpoints will be handled:
 
-URI             | Method | Description
-----------------|--------|-------------
-/               | GET    | Returns the home page
-/about          | GET    | Returns an about page
-/images/<image> | GET    | Returns the image from backend.get_image
-/pages          | GET    | Returns all of the pages in a list via backend.get_all_page_names
-/pages/<page>   | GET    | Returns the page from backend.get_wiki_page
+URI                                      | Method   | Description
+-----------------------------------------|----------|-----------------------------------
+/                                        | GET      | Returns the home page
+/about                                   | GET      | Returns an about page
+/images/<image>                          | GET      | Returns the image from backend.get_image
+/pages                                   | GET      | Returns all of the pages in a list via backend.get_all_page_names
+/pages/<page>                            | GET      | Returns the page from backend.get_wiki_page
+/page/<page_name>/previous               | GET,POST | Handles showing and reverting to the previous version of a wiki page
+/pages/<page_name>/showing_previous_version | GET   | Displays the previous version of a wiki page
+/pages/<page_name>/previous_versions     | GET      | Lists all previous versions of a wiki page
 """
 """
 added login_required to make sure that only autherized users can edit
@@ -38,18 +41,19 @@ def make_endpoints(app, backend):
     def save_changes():
         page_name = request.form['page_name']
         content = request.form['content']
-        print("Page Name:", page_name)
-        print("Content:", content)
+
 
         # Check if the page_name value is not empty
         if not page_name:
-            return "Error: Page name cannot be empty."
+            error_message = "Error: Page name cannot be empty."
+            return render_template('error.html', error_message=error_message), 400
 
         # Save content using the backend object
         backend.save_wiki_page(page_name, content, current_user.username)
         
         # Redirect to the updated page after saving
         return redirect(url_for('show_page', page_name=page_name))
+
         
     @app.route('/pages/<page_name>')
     def show_page(page_name):
@@ -57,16 +61,16 @@ def make_endpoints(app, backend):
         try:
             content = backend.get_wiki_page(page_name)
         except ValueError as ve:
-            # return error to user if page is not foudn
-            return render_template('main.html',
-                                   page_name=page_name,
-                                   page_content=str(ve))
+            # return error page to user if page is not found
+            return render_template('error.html',
+                                page_name=page_name,
+                                error_message=str(ve)), 404
 
         # render the show_page template with the title and content
         return render_template('show_page.html',
-                                title=page_name,
                                 content=content,
                                 page_name=page_name)
+
 
     @app.route('/pages/<page_name>/showing_previous_version', methods=['GET'])
     @login_required
@@ -77,7 +81,12 @@ def make_endpoints(app, backend):
             return "No previous version found", 404
 
         return render_template('showing_previous_version.html', page_name=page_name, content=content, timestamp=timestamp, username=username)
-
+    """
+    The flash() method in Flask is used to display temporary messages to the user.
+    These messages are called "flash messages." When you call flash() with a message,
+    the message is stored temporarily and can be rendered in the HTML templates 
+    using the get_flashed_messages() function.
+    """        
     @app.route("/page/<page_name>/previous", methods=["GET", "POST"], endpoint='show_previous_version')
     @login_required
     def replace_with_previous_version(page_name):
