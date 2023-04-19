@@ -228,3 +228,4 @@ def test_sign_in_bad_password(hash, backend, user_bucket, blob, file_stream):
     user_bucket.get_blob.assert_called_with("test_user")
     blob.open.assert_called_with()
     hash.assert_called_with("test_user:bad password".encode())
+
