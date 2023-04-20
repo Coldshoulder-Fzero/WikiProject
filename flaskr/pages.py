@@ -9,6 +9,7 @@ URI             | Method | Description
 /images/<image> | GET    | Returns the image from backend.get_image
 /pages          | GET    | Returns all of the pages in a list via backend.get_all_page_names
 /pages/<page>   | GET    | Returns the page from backend.get_wiki_page
+/search         | GET    | Returns page names of all instances of a 'query'
 """
 
 from flask import render_template, send_file, request, pages_test
