@@ -228,3 +228,16 @@ def test_sign_in_bad_password(hash, backend, user_bucket, blob, file_stream):
     user_bucket.get_blob.assert_called_with("test_user")
     blob.open.assert_called_with()
     hash.assert_called_with("test_user:bad password".encode())
+
+def test_search_success(content_bucket):
+    # Create two blobs with the test data
+    blob1 = content_bucket.blob('test1')
+    blob1.upload_from_string('this is a test')
+
+    blob2 = content_bucket.blob('test2')
+    blob2.upload_from_string('this is another test')
+
+    # Ensure that only the first blob is returned
+    results = backend.search('test1')
+    assert len(results) == 1
+    assert results[0] == 'test1'

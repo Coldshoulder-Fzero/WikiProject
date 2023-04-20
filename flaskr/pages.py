@@ -11,7 +11,7 @@ URI             | Method | Description
 /pages/<page>   | GET    | Returns the page from backend.get_wiki_page
 """
 
-from flask import render_template, send_file, request
+from flask import render_template, send_file, request, pages_test
 
 
 # Note: pages.py relies on the backend to fulfill some routes so we need to
@@ -67,7 +67,8 @@ def make_endpoints(app, backend):
         """
         return send_file(backend.get_image(image), mimetype='image/jpeg')
     
-    # try and use content_type at the end of blob
+    
+    #takes in query 
 
     @app.route('/search')
     def search():

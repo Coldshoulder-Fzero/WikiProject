@@ -76,13 +76,16 @@ class Backend:
             with blob.open('rb') as b:
                 return BytesIO(b.read())
 
+    #search through blob content to find matching content
     def search(self, query):
         blobs = self.content_bucket.list_blobs()
         results = []
         for blob in blobs:
+            #making sure that we aren't parsing through unparsable objexts like images
             if blob.content_type not in ('image/jpeg', 'image/jpg', 'image/png'):                
                 with blob.open() as b:
                     content = b.read()
+                    # lowering to make matching and comparing easier
                     if query.lower() in content.lower():
                         results.append(blob.name.split('/')[-1])
         return results

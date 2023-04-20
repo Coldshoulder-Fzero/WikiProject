@@ -27,6 +27,8 @@
             <a href="{{ url_for('login') }}">Login</a>
             <a href="{{ url_for('signup') }}">Sign Up</a>
             {% endif %}
+            <!-- adding search bar form text box -->
+            <!-- "GET" call being made to retrieve results from search() call -->
             <form method="GET" action="{{ url_for('search') }}">
                 <label for="query">Search query:</label>
                 <input type="text" id="query" name="query" required>
