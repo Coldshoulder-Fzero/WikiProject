@@ -34,6 +34,27 @@
 
 
 
+
+a{
+    text-decoration: none;
+    display: inline-block;
+}
+
+a:hover{
+    color:black;
+}
+
+.next, .previous{
+    position:relative;
+    font-size:65px;  
+    top: 2em;
+}
+
+.previous{
+    right: 9em;
+}
+
+
 /* ---------------------------------------------------------------------------Slider style and animation--------------------------------------------------------------------------- */
 /* Adding style to slider */
 .slider-container{

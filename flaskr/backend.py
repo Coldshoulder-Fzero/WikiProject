@@ -74,4 +74,5 @@ class Backend:
             return BytesIO()
         else:
             with blob.open('rb') as b:
-                return BytesIO(b.read())
+                return BytesIO(b.read()) 
+                          
