@@ -31,9 +31,9 @@ class User:
 '''
 
 class Admin:
-    def __init__(self, username,role):
+    def __init__(self, username):
         self.username = username
-        self.role = role
+        self.role = ""
         # by default, we return True to indicate that every User that we create will be authenticated
         self.is_authenticated = True
         # by default, we return True to indicate that every User is active

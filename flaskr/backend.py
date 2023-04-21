@@ -1,4 +1,5 @@
 from flaskr.user import User
+from flaskr.user import Admin
 from google.cloud import storage
 from io import BytesIO
 from hashlib import sha256
@@ -6,6 +7,14 @@ from hashlib import sha256
 
 class Backend:
 
+    """Modified Function: Adding bucket for admin.
+
+    In this function I added the name of the admin bucket in Cloud Storage in the self.admin_bucket_name variable
+    and called for the buckt in the self.admin_bucket variable
+
+    Uses of bucket:
+        -Sign_in() -> checking if the credentials belong to a user or an admin
+    """
     def __init__(self, storage_client=storage.Client()):
         '''Added admin bucket and bucket name to check when log in for admin permission'''
 
@@ -55,6 +64,14 @@ class Backend:
         # return a default user object with the given username
         return User(username)
 
+
+    """Modified funtion:  Adding sign in option for admin.
+
+    Since this method was used to sign in normal users, it is now modified to identify credentials in the admin bucket. 
+    This was done by addimg the admin_bob (line67), openning and storing the credentials, and by checking if the sign in credentials given are in user or admin buckets.
+    Since the Admin class has been imported, when we recognice an admin we return it instead of returning a user
+
+    """
     def sign_in(self, username, password):
         '''Created admin blob to check in admin bucket'''
         blob = self.user_bucket.get_blob(username)
@@ -64,18 +81,18 @@ class Backend:
 
         # create hashed string to compare with bucket contents
         expected_hashed_string = sha256(f'{username}:{password}'.encode()).hexdigest()
+
         '''Comparing if the credentials are in either user or admin bucket and returning User or Admin, if not -> invalid user credentials'''
         with blob.open() as b, admin_blob.open() as admin:
+            expected_hashed_string = sha256(f'{username}:{password}'.encode()).hexdigest()
 
-        expected_hashed_string = sha256(
-            f'{username}:{password}'.encode()).hexdigest()
         with blob.open() as b:
 
             if expected_hashed_string == b.read():
                 # successful login, return a User object
                 return User(username)
             if expected_hashed_string == admin.read():
-                return User(username)
+                return Admin(username)
             else:
                 # failed login, throw error
                 raise ValueError(f'Invalid password for username {username}!')
