@@ -1,13 +1,25 @@
 /* This is where my CSS will go! */
 @import "https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css";
 
-body {
+
+*{
     margin: 25px;
     background-color: rgb(240,240,240);
     font-family: courier;
     font-size: 14px;
 }
+body {
+    margin: 25px;
+    font-family: courier;
+    font-size: 14px;
+    overflow: hidden;
+}
 
+.username{
+    position: relative;
+    font-size: 20px;
+    top:1.04em;
+}
 .wiki-name {
     position: relative;
     text-align: center;
@@ -16,11 +28,18 @@ body {
     font-size: 50px;
 }
 .navbar{
+    background-color: rgb(240,240,240);
     position:relative;
     text-align: center;
+    left: 35em;
 }
+
 
 a {
     font-size: larger;
     font-family: Arial, Helvetica, sans-serif;
+}
+
+a:hover{
+    color: black;
 }

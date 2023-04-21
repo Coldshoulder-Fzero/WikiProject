@@ -9,25 +9,25 @@
 
 <body>
     <header>
-        <h1 class="wiki-name">Awesome Wiki Viewer</h1>
+        <h1 style="font-family:Times" class="wiki-name">Awesome Wiki Viewer</h1>
 
         <!-- Links for the navigation bar -->
-        <nav class="navbar">
-            <a href="{{ url_for('home') }}">Home</a>
-            <a href="{{ url_for('about') }}">About</a>
-            <a href="{{ url_for('pages') }}">Index</a>
+        <div class="navbar">
+            <a clas="link" href="{{ url_for('home') }}">Home</a>
+            <a clas="link" href="{{ url_for('about') }}">About</a>
+            <a clas="link" href="{{ url_for('pages') }}">Index</a>
              <!-- only show the upload and logout links if the user is logged in -->
             {% if current_user.is_active %}
             <!-- display the user name -->
-            {{ current_user.username }}
-            <a href="{{ url_for('upload') }}">Upload</a>
-            <a href="{{ url_for('logout') }}">Logout</a>
+            <p class="username"> {{ current_user.username }} </p>
+            <a clas="link" href="{{ url_for('upload') }}">Upload</a>
+            <a clas="link" href="{{ url_for('logout') }}">Logout</a>
             <!-- otherwise, display the login and signup links -->
             {% else %}
             <a href="{{ url_for('login') }}">Login</a>
             <a href="{{ url_for('signup') }}">Sign Up</a>
             {% endif %}
-        </nav>
+        </div>
         <h3> Welcome to the wiki!!!  It's about video game history</h3>  
     </header>
 
