@@ -8,10 +8,16 @@ body {
     font-size: 14px;
 }
 
-h1 {
+.wiki-name {
+    position: relative;
+    text-align: center;
     margin-top: 5px;
     font-family: verdana;
     font-size: 50px;
+}
+.navbar{
+    position:relative;
+    text-align: center;
 }
 
 a {
