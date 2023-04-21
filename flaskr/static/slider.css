@@ -120,10 +120,10 @@ a:hover{
 
 }
 .slider-title{
-    background: #00000;
     font-size:25px;
     text-align: center;
 }
+
 .slider{
     position: relative;
     width: 60%;   
