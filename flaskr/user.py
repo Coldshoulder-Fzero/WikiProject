@@ -42,4 +42,4 @@ class Admin:
         self.is_anonymous = False    
     
     def admin_id(self):
-        return self.username, self.role
+        return self.role
