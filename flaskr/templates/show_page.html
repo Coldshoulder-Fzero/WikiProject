@@ -8,9 +8,11 @@
     <div class="page-content">
         {{ content }}
     </div>
+    {% if current_user.is_authenticated %}
     <button class="edit-page">Edit</button>
     <!-- Add the link to the previous version -->
     <a href="{{ url_for('show_previous_version', page_name=page_name, prev_version_id=prev_version_id) }}">View previous version</a>
+    {% endif %}
 
     <!-- Add a modal for editing the wiki page -->
     <div id="edit-modal" style="display: none;">
