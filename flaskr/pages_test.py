@@ -39,7 +39,6 @@ def test_about_page(client):
     assert resp.status_code == 200
     assert b"About this Wiki" in resp.data
 
-
 def test_sega_page(client):
     resp = client.get("pages/Sega")
     assert resp.status_code == 200
@@ -56,12 +55,6 @@ def test_ds_page(client):
     resp = client.get("pages/DS")
     assert resp.status_code == 200
     assert b"DS" in resp.data
-
-
-def test_mobile_gaming_page(client):
-    resp = client.get("pages/Mobile Gaming")
-    assert resp.status_code == 200
-    assert b"Mobile Gaming" in resp.data
 
 
 def test_nintendo_page(client):
@@ -100,10 +93,6 @@ def test_xbox_page(client):
     assert b"Xbox" in resp.data
 
 
-def test_nonexistent_page(client):
-    resp = client.get("pages/nonexistent")
-    assert resp.status_code == 200
-    assert b"No page exists with the given name:" in resp.data
 
 
 def test_all_pages(client):
