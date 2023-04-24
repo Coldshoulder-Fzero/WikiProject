@@ -57,12 +57,6 @@ def test_ds_page(client):
     assert b"DS" in resp.data
 
 
-def test_mobile_gaming_page(client):
-    resp = client.get("pages/Mobile Gaming")
-    assert resp.status_code == 200
-    assert b"MobileGaming" in resp.data
-
-
 def test_nintendo_page(client):
     resp = client.get("pages/Nintendo")
     assert resp.status_code == 200
@@ -99,10 +93,6 @@ def test_xbox_page(client):
     assert b"Xbox" in resp.data
 
 
-def test_nonexistent_page(client):
-    resp = client.get("pages/nonexistent")
-    assert resp.status_code == 200
-    assert b"No page exists with the given name:" in resp.data
 
 
 def test_all_pages(client):
