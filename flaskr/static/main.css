@@ -1,2 +1,20 @@
-
 /* This is where my CSS will go! */
+@import "https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css";
+
+body {
+    margin: 25px;
+    background-color: rgb(240,240,240);
+    font-family: courier;
+    font-size: 14px;
+}
+
+h1 {
+    margin-top: 5px;
+    font-family: verdana;
+    font-size: 50px;
+}
+
+a {
+    font-size: larger;
+    font-family: Arial, Helvetica, sans-serif;
+}
