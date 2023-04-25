@@ -14,6 +14,8 @@
     <a href="{{ url_for('show_previous_version', page_name=page_name, prev_version_id=prev_version_id) }}">View previous version</a>
     {% endif %}
 
+    <p><a href="{{ url_for('show_previous_version', page_name=title) }}">View previous version</a></p>
+
     <!-- Add a modal for editing the wiki page -->
     <div id="edit-modal" style="display: none;">
         <h2>Edit Wiki Page</h2>

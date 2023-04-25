@@ -145,3 +145,4 @@ def make_endpoints(app, login_manager, backend):
         return render_template('main.html',
                                page_name='Signup Successful',
                                page_content='Successfully signed up!')
+

@@ -100,9 +100,7 @@ class Backend:
         else:
             with blob.open('rb') as b:
                 return BytesIO(b.read())
-
-
-    def _fetch_previous_versions(self, page_name):
+    def get_previous_versions(self, page_name):
         history_blobs = sorted(
             [blob for blob in self.content_bucket.list_blobs(prefix=f'history/{page_name}')],
             key=lambda x: x.name,
