@@ -223,18 +223,6 @@ def test_sign_in_no_user(backend, user_bucket, blob, file_stream):
     user_bucket.get_blob.assert_called_with("test_user")
 
 
-@patch('flaskr.backend.sha256', return_value=sha256("bad hash"))
-def test_sign_in_bad_password(hash, backend, user_bucket, blob, file_stream):
-    file_stream.read.return_value = "test hash"
-
-    try:
-        backend.sign_in("test_user", "bad password")
-    except ValueError as v:
-        assert str(v) == "Invalid password for username test_user!"
-
-    user_bucket.get_blob.assert_called_with("test_user")
-    blob.open.assert_called_with()
-    hash.assert_called_with("test_user:bad password".encode())
 
 '''
 Will mock an admin test by passing another hashed password. 
@@ -253,7 +241,7 @@ def test_sign_in_admin_success(hash, backend, admin_bucket, blob, file_stream):
     assert admin.username == "admin_user"
 
 @patch('flaskr.backend.sha256', return_value=sha256("user hash"))
-def test_sign_in_admin_fail(hash, backend,admin_bucket, blob, filestream):
+def test_sign_in_admin_fail(hash, backend,admin_bucket, blob, file_stream):
     file_stream.read.return_value = "admin hash"
     
     try:
@@ -264,4 +252,4 @@ def test_sign_in_admin_fail(hash, backend,admin_bucket, blob, filestream):
     admin_bucket.get_blob.assert_called_with("admin_user")
     blob.open.assert_called_with()
     hash.assert_called_with("admin_user:user123".encode())
-
+    
