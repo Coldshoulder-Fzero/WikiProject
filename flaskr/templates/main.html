@@ -1,44 +1,73 @@
-<!-- base.html -->
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 
 <head>
-    <title>{% block page_name %}{{ page_name }}{% endblock %}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-KyZXEAg3QhqLMpG8r+Knujsl5/1pSdmAX7/sW4x+6kt7f6zfr/2Qm6W8cxT7kpz6" crossorigin="anonymous">
     <link rel="stylesheet" href="/static/main.css" />
+    <title>{% block page_name %}{{ page_name }}{% endblock %}</title>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
 </head>
 
 <body>
-    <header>
-        <h1>Awesome Wiki Viewer</h1>
+<header>
+    <h1>awesomeWikiViewer</h1>
 
-        <!-- Links for the navigation bar -->
-        <nav>
-            <a href="{{ url_for('home') }}">Home</a>
-            <a href="{{ url_for('about') }}">About</a>
-            <a href="{{ url_for('pages') }}">Index</a>
-             <!-- only show the upload and logout links if the user is logged in -->
-            {% if current_user.is_active %}
-            <!-- display the user name -->
+    <nav>
+        <a href="{{ url_for('home') }}">Home</a>
+        <a href="{{ url_for('about') }}">About</a>
+        <a href="{{ url_for('pages') }}">Index</a>
+
+        {% if current_user.is_active %}
             {{ current_user.username }}
             <a href="{{ url_for('upload') }}">Upload</a>
             <a href="{{ url_for('logout') }}">Logout</a>
-            <!-- otherwise, display the login and signup links -->
-            {% else %}
+        {% else %}
             <a href="{{ url_for('login') }}">Login</a>
             <a href="{{ url_for('signup') }}">Sign Up</a>
-            {% endif %}
-        </nav>
-        <h3> Welcome to the wiki!!!  It's about video game history</h3>  
-    </header>
+        {% endif %}
+    </nav>
+    <h3>Welcome to the wiki!!! It's about video game history</h3>
+</header>
 
-    <!-- empty div to use to populate generic content for the page -->
-    <div>       
-        {% block content %}{{ page_content }}{% endblock %}
-    </div>
+<div>
+    {% block content %}{% endblock %}
+</div>
 
-    <footer>
-        &copy; 2023 awesomeWikiViewer
-    </footer>
+<footer>
+    &copy; 2023 awesomeWikiViewer
+</footer>
+
+{% block scripts %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            $(".edit-page").on("click", function () {
+                const pageName = $(this).data("page-name");
+                $("#page_name").val(pageName);
+                $("#edit-modal").show();
+            });
+    
+            $("#close-modal").on("click", function () {
+                $("#edit-modal").hide();
+            });
+
+            // Intercept the form submission and log the data for debugging
+            $("#edit-form").on("submit", function (e) {
+                e.preventDefault();
+                console.log($(this).serialize());
+                this.submit();
+            });
+        });
+    </script>
+{% endblock %}
+
 </body>
 
 </html>
+

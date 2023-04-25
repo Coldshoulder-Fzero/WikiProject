@@ -2,6 +2,8 @@ from flaskr.user import User
 from google.cloud import storage
 from io import BytesIO
 from hashlib import sha256
+from datetime import datetime
+import re
 
 
 class Backend:
@@ -21,14 +23,37 @@ class Backend:
             with blob.open() as b:
                 return b.read()
 
+    def save_wiki_page(self, page_name, content, username):
+        if self.content_bucket.blob(page_name).exists():
+            current_content = self.get_wiki_page(page_name)
+            current_time = datetime.now()
+            formatted_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
+            timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
+            history_blob = self.content_bucket.blob(f'history/{page_name}-{timestamp}-{username}.txt')
+            history_blob.upload_from_string(current_content)
+
+            blob = self.content_bucket.blob(page_name)
+            blob.upload_from_string(content)
+
+    def revert_to_previous(self, page_name, username):
+        content, _, _ = self.get_previous_version(page_name)
+        if content is not None:
+            self.save_wiki_page(page_name, content, username)
+            return True
+        return False
+
+
     def get_all_page_names(self):
         blobs = self.content_bucket.list_blobs()
-        # we should ignore any blobs that are images
-        return [
+        ignored_prefixes = ('history/', 'authorImages/')
+        ignored_extensions = ('.png', '.jpg', '.jpeg')
+
+        page_names = [
             blob.name
             for blob in blobs
-            if not blob.name.endswith(('png', 'jpg', 'jpeg'))
+            if not blob.name.startswith(ignored_prefixes) and not blob.name.endswith(ignored_extensions)
         ]
+        return page_names
 
     def upload(self, name, blob_data):
         blob = self.content_bucket.get_blob(name)
@@ -75,3 +100,31 @@ class Backend:
         else:
             with blob.open('rb') as b:
                 return BytesIO(b.read())
+
+
+    def _fetch_previous_versions(self, page_name):
+        history_blobs = sorted(
+            [blob for blob in self.content_bucket.list_blobs(prefix=f'history/{page_name}')],
+            key=lambda x: x.name,
+            reverse=True
+        )
+        previous_versions = []
+        for blob in history_blobs:
+            split_list = re.split('/|-', blob.name[:-4])
+            if len(split_list) >= 4:
+                _, _, timestamp, username = split_list
+                timestamp = datetime.strptime(timestamp, "%Y%m%d%H%M%S").strftime("%Y-%m-%d %H:%M:%S")
+                previous_versions.append((blob.name, timestamp, username))
+        return previous_versions
+
+    def get_previous_version(self, page_name):
+        previous_versions = self._fetch_previous_versions(page_name)
+        if not previous_versions:
+            return None, None, None
+
+        latest_history_blob_name, timestamp, username = previous_versions[0]
+        latest_history_blob = self.content_bucket.get_blob(latest_history_blob_name)
+        return latest_history_blob.download_as_text(), timestamp, username
+
+    def get_all_previous_versions(self, page_name):
+        return self._fetch_previous_versions(page_name)

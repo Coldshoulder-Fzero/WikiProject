@@ -43,3 +43,4 @@ def create_app(test_config=None):
     upload.make_endpoints(app, backend)
 
     return app
+
