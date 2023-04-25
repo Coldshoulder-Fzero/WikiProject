@@ -1,7 +1,7 @@
-{% extends "base.html" %}
+{% extends "main.html" %}
 
 {% block content %}
-<h2>Previous Version of "{{ page_name }}"</h2>
+<h2>Previous Version of "{{ page  }}"</h2>
 <p>Timestamp: {{ timestamp }}</p>
 <p>Edited by: {{ username }}</p>
 
@@ -9,6 +9,5 @@
     {{ content | safe }}
 </div>
 
-<a href="{{ url_for('show_page', page_name=page_name) }}">Return to current version</a>
+<a href="{{ url_for('show_page', page_name=page) }}">Return to current version</a>
 {% endblock %}
-

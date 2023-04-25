@@ -53,7 +53,7 @@ def make_endpoints(app, backend):
         if content is None:
             return "No previous version found", 404
 
-        return render_template('previous_version.html', title=page_name, content=content, timestamp=timestamp, username=username)
+        return render_template('showing_previous_version.html', title=page_name, content=content, timestamp=timestamp, username=username, page=page_name)
 
 
 
