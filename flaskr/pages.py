@@ -35,26 +35,27 @@ def make_endpoints(app, backend):
     def save_changes():
         page_name = request.form['page_name']
         content = request.form['content']
-        print("Page Name:", page_name)
-        print("Content:", content)
+
 
         # Check if the page_name value is not empty
         if not page_name.strip():
             return "Error: Page name cannot be empty", 400
-
+        username = current_user.username
+        backend.save_wiki_page(page_name, content, username)
         # Save content using the backend object
-        backend.save_wiki_page(page_name, content)
         # Redirect to the updated page after saving
         return redirect(url_for('show_page', page_name=page_name))
 
     @app.route('/pages/<page_name>/previous_version')
     @login_required
     def show_previous_version(page_name):
-        content, timestamp, username = backend.get_previous_versions(page_name)
+        content, timestamp, username = backend.get_previous_version(page_name)
         if content is None:
             return "No previous version found", 404
 
         return render_template('previous_version.html', title=page_name, content=content, timestamp=timestamp, username=username)
+
+
 
     @app.route('/pages/<page_name>')
     def show_page(page_name):
