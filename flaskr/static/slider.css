@@ -18,6 +18,9 @@
     margin: auto;
 }
 
+.slider-subtitle{
+    font-size: 15px;
+}
 .textSl p{
     width: 25ch;
     border-right: 4px solid black; 
@@ -153,7 +156,20 @@ img{
     box-shadow: 3px 3px 5px #b9a3a5;
 
 }
-
+.color img{
+    filter: grayscale(100%);
+    -webkit-filter: grayscale(100%);
+    -webkit-transition: all 1s ease;
+    }
+    
+    .color img:hover{
+    cursor:pointer;
+    filter: grayscale(0%);
+    filter: gray;
+    -webkit-filter: grayscale(0%);
+    filter: none;
+    transition: 1s ease;
+    }
 
 .slide1{
     z-index: 0;
